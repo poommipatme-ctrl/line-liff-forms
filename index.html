@@ -4,8 +4,192 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>แบบฟอร์มกรอกค่า</title>
+<!--
+  หน้าฟอร์มกรอกตัวเลขของ LINE LIFF — "ตัวจับข้อมูล" เท่านั้น ไม่คำนวณอะไรเลย
+
+  ⚠️ สัญญากับบอท (line-group-bot · src/line/liff-form.ts):
+    · บอทส่งชุดช่องมาทาง query `f` = base64url(JSON ของ [{label, unit?, optional?, integer?, min?, max?}])
+    · หน้านี้ส่งกลับเข้าแชทเป็นข้อความเดียว = ค่าตามลำดับช่อง คั่นด้วยช่องว่าง เช่น "450 120 3"
+      (ตัดช่อง optional ท้ายที่ว่างออก) — รูปเดียวกับที่ผู้ใช้พิมพ์เองเป๊ะ
+    · บอทเป็นผู้ตัดสินค่าตัวเดียว (parseNumbers) — หน้านี้ไม่ตรวจ min/max/จำนวนเต็มซ้ำ
+      ใช้แค่เป็นแอตทริบิวต์ของช่องกรอกเพื่อช่วยผู้ใช้ ถ้าค่าผิด บอทตอบ error ของมันเองเหมือนตอนพิมพ์
+
+  ⚠️ ความปลอดภัย: หน้านี้เป็นสาธารณะ ใครก็สร้าง URL ที่มี `f` อะไรก็ได้
+    · ป้ายกำกับแสดงด้วย textContent เท่านั้น ห้ามใช้ innerHTML
+    · สิ่งที่ส่งเข้าแชทมีแต่ตัวเลขที่ผ่าน Number() แล้ว — ป้ายกำกับไม่ถูกส่งเลย
+-->
+<style>
+  :root { --paper:#FFFFFF; --ink:#111417; --head:#EDF1F5; --bar:#111417; --bar-ink:#FFFFFF; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink);
+         font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Thai", sans-serif; font-size:17px; }
+  header { background:var(--head); padding:16px; font-weight:700; font-size:19px; }
+  main { padding:16px; }
+  .field { margin-bottom:18px; }
+  label { display:block; font-weight:600; margin-bottom:6px; }
+  .opt { font-weight:400; }
+  .row { display:flex; gap:8px; align-items:center; }
+  input { flex:1; font-size:20px; padding:12px; border:2px solid var(--ink); border-radius:8px; min-width:0; }
+  .unit { white-space:nowrap; }
+  .preview { background:var(--head); padding:12px; border-radius:8px; margin:8px 0 18px; word-break:break-all; }
+  button { width:100%; font-size:19px; font-weight:700; padding:14px; border:0; border-radius:8px;
+           background:var(--bar); color:var(--bar-ink); }
+  button:disabled { opacity:.35; }
+  .msg { padding:12px; border:2px solid var(--ink); border-radius:8px; margin-top:14px; }
+  [hidden] { display:none !important; }
+</style>
 </head>
 <body>
-<p>แบบฟอร์มกรอกค่า — เตรียมพร้อม</p>
+<header id="title">กรอกค่าเพื่อคำนวณ</header>
+<main>
+  <form id="form" hidden>
+    <div id="fields"></div>
+    <div>จะส่งเข้าแชท:</div>
+    <div class="preview" id="preview">—</div>
+    <button type="submit" id="submit" disabled>ยืนยัน</button>
+  </form>
+  <div class="msg" id="msg" hidden></div>
+</main>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  /* ใส่ LIFF ID หลังลงทะเบียนในแชนแนล LINE Login แล้ว — ไม่ใช่ความลับ (อยู่ในลิงก์ liff.line.me อยู่แล้ว) */
+  const LIFF_ID = '';
+
+  const MAX_FIELDS = 10;
+  const MAX_LABEL = 80;
+  const $ = (id) => document.getElementById(id);
+
+  function showMessage(text) {
+    const m = $('msg');
+    m.textContent = text;
+    m.hidden = false;
+  }
+
+  /** ถอด f = base64url(UTF-8 JSON) — คืน null ถ้าอ่านไม่ได้ ไม่ throw */
+  function decodeFields(f) {
+    try {
+      let b64 = f.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      const list = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      if (!Array.isArray(list) || list.length === 0 || list.length > MAX_FIELDS) return null;
+      return list.map((x) => ({
+        label: String(x.label ?? '').slice(0, MAX_LABEL),
+        unit: x.unit === undefined ? '' : String(x.unit).slice(0, MAX_LABEL),
+        optional: x.optional === true,
+        integer: x.integer === true,
+        min: typeof x.min === 'number' ? x.min : undefined,
+        max: typeof x.max === 'number' ? x.max : undefined,
+      }));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /** f มาได้สองทาง: query ปกติ (หลัง liff.init) หรือยังห่ออยู่ใน liff.state */
+  function readF() {
+    const q = new URLSearchParams(location.search);
+    if (q.get('f')) return q.get('f');
+    const state = q.get('liff.state');
+    if (state) {
+      const inner = new URLSearchParams(state.slice(state.indexOf('?') + 1));
+      if (inner.get('f')) return inner.get('f');
+    }
+    return null;
+  }
+
+  /** ค่าตามลำดับช่อง คั่นช่องว่าง · ตัดช่อง optional ท้ายที่ว่าง · null = ช่องบังคับยังไม่ครบ */
+  function buildMessage(fields, inputs) {
+    const values = inputs.map((el) => el.value.trim());
+    let last = values.length - 1;
+    while (last >= 0 && values[last] === '' && fields[last].optional) last -= 1;
+    const out = [];
+    for (let i = 0; i <= last; i += 1) {
+      const n = Number(values[i]);
+      if (values[i] === '' || !Number.isFinite(n)) return null;
+      out.push(String(n));
+    }
+    return out.length === 0 ? null : out.join(' ');
+  }
+
+  function render(fields) {
+    const box = $('fields');
+    const inputs = fields.map((f, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'field';
+      const label = document.createElement('label');
+      label.htmlFor = 'v' + i;
+      label.textContent = f.label + (f.optional ? '' : ' *');
+      if (f.optional) {
+        const o = document.createElement('span');
+        o.className = 'opt';
+        o.textContent = ' (ไม่ใส่ก็ได้)';
+        label.appendChild(o);
+      }
+      const row = document.createElement('div');
+      row.className = 'row';
+      const input = document.createElement('input');
+      input.id = 'v' + i;
+      input.type = 'number';
+      input.inputMode = f.integer ? 'numeric' : 'decimal';
+      input.step = f.integer ? '1' : 'any';
+      if (f.min !== undefined) input.min = String(f.min);
+      if (f.max !== undefined) input.max = String(f.max);
+      const unit = document.createElement('span');
+      unit.className = 'unit';
+      unit.textContent = f.unit;
+      row.append(input, unit);
+      wrap.append(label, row);
+      box.appendChild(wrap);
+      return input;
+    });
+
+    const update = () => {
+      const text = buildMessage(fields, inputs);
+      $('preview').textContent = text ?? '—';
+      $('submit').disabled = text === null;
+    };
+    inputs.forEach((el) => el.addEventListener('input', update));
+    update();
+
+    $('form').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const text = buildMessage(fields, inputs);
+      if (text === null) return;
+      $('submit').disabled = true;
+      try {
+        if (!liff.isInClient()) throw new Error('not-in-client');
+        await liff.sendMessages([{ type: 'text', text }]);
+        liff.closeWindow();
+      } catch (e) {
+        /* เปิดนอกแอป LINE หรือเปิดซ้ำจาก "recently used" (403) — ให้ผู้ใช้พิมพ์เองได้เสมอ */
+        showMessage('ส่งเข้าแชทอัตโนมัติไม่ได้ — พิมพ์ข้อความนี้ในแชทแทนได้: ' + text);
+        $('submit').disabled = false;
+      }
+    });
+    $('form').hidden = false;
+  }
+
+  (async () => {
+    if (!LIFF_ID) {
+      showMessage('หน้านี้ยังไม่ได้ตั้งค่า LIFF ID');
+      return;
+    }
+    try {
+      await liff.init({ liffId: LIFF_ID });
+    } catch (e) {
+      showMessage('เปิดฟอร์มไม่สำเร็จ — กลับไปพิมพ์ตัวเลขในแชทได้ตามเดิม');
+      return;
+    }
+    const f = readF();
+    const fields = f === null ? null : decodeFields(f);
+    if (fields === null) {
+      showMessage('ลิงก์ฟอร์มไม่ครบ — กลับไปพิมพ์ตัวเลขในแชทได้ตามเดิม');
+      return;
+    }
+    render(fields);
+  })();
+</script>
 </body>
 </html>

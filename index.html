@@ -54,7 +54,7 @@
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
   /* ใส่ LIFF ID หลังลงทะเบียนในแชนแนล LINE Login แล้ว — ไม่ใช่ความลับ (อยู่ในลิงก์ liff.line.me อยู่แล้ว) */
-  const LIFF_ID = '';
+  const LIFF_ID = '2011553845-L5ydGKbv';
 
   const MAX_FIELDS = 10;
   const MAX_LABEL = 80;
@@ -163,8 +163,12 @@
         await liff.sendMessages([{ type: 'text', text }]);
         liff.closeWindow();
       } catch (e) {
-        /* เปิดนอกแอป LINE หรือเปิดซ้ำจาก "recently used" (403) — ให้ผู้ใช้พิมพ์เองได้เสมอ */
-        showMessage('ส่งเข้าแชทอัตโนมัติไม่ได้ — พิมพ์ข้อความนี้ในแชทแทนได้: ' + text);
+        /*
+         * เปิดนอกแอป LINE · เปิดซ้ำจาก "recently used" (403) · หรือ LIFF app ไม่ได้ติ๊ก scope
+         * chat_message.write — ให้ผู้ใช้พิมพ์เองได้เสมอ และพิมพ์รหัสข้อผิดพลาดไว้ให้ไล่สาเหตุได้
+         */
+        const code = e && (e.code || e.message) ? String(e.code || e.message).slice(0, 60) : 'unknown';
+        showMessage('ส่งเข้าแชทอัตโนมัติไม่ได้ — พิมพ์ข้อความนี้ในแชทแทนได้: ' + text + ' (รหัส: ' + code + ')');
         $('submit').disabled = false;
       }
     });

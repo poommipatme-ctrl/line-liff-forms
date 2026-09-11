@@ -1,0 +1,162 @@
+{
+  "generatedBy": "line-group-bot/scripts/liff-form-fixtures.ts",
+  "cases": [
+    {
+      "name": "ตัวเลขล้วน (f=) · น้ำร้อนจำนวนคน",
+      "query": "f=W3sibGFiZWwiOiLguIjguLPguJnguKfguJnguITguJkiLCJ1bml0Ijoi4LiE4LiZIiwiaW50ZWdlciI6dHJ1ZSwibWluIjoxfSx7ImxhYmVsIjoi4LiE4Lin4Liy4Lih4LiV4LmJ4Lit4LiH4LiB4Liy4Lij4LiZ4LmJ4Liz4Lij4LmJ4Lit4LiZIiwidW5pdCI6IuC4peC4tOC4leC4oy_guITguJkv4Lin4Lix4LiZIiwibWluIjoxfSx7ImxhYmVsIjoi4Lij4Liw4Lii4Liw4LmA4Lin4Lil4Liy4Lie4Li14LiE4LiV4Li04LiU4LiV4LmI4Lit4LiB4Lix4LiZIiwidW5pdCI6IuC4iuC4seC5iOC4p-C5guC4oeC4hyIsIm1pbiI6MC41fV0",
+      "values": [
+        "450",
+        "120",
+        "3"
+      ],
+      "expected": "450 120 3",
+      "maxLen": null
+    },
+    {
+      "name": "ตัวเลขล้วน · ช่อง optional ท้ายว่างถูกตัด",
+      "query": "f=W3sibGFiZWwiOiJhIiwibWluIjowfSx7ImxhYmVsIjoiYiIsIm9wdGlvbmFsIjp0cnVlfV0",
+      "values": [
+        "5",
+        ""
+      ],
+      "expected": "5",
+      "maxLen": null
+    },
+    {
+      "name": "ตัวเลขล้วน · ยังกรอกไม่ครบ → null",
+      "query": "f=W3sibGFiZWwiOiLguIjguLPguJnguKfguJnguITguJkiLCJ1bml0Ijoi4LiE4LiZIiwiaW50ZWdlciI6dHJ1ZSwibWluIjoxfSx7ImxhYmVsIjoi4LiE4Lin4Liy4Lih4LiV4LmJ4Lit4LiH4LiB4Liy4Lij4LiZ4LmJ4Liz4Lij4LmJ4Lit4LiZIiwidW5pdCI6IuC4peC4tOC4leC4oy_guITguJkv4Lin4Lix4LiZIiwibWluIjoxfSx7ImxhYmVsIjoi4Lij4Liw4Lii4Liw4LmA4Lin4Lil4Liy4Lie4Li14LiE4LiV4Li04LiU4LiV4LmI4Lit4LiB4Lix4LiZIiwidW5pdCI6IuC4iuC4seC5iOC4p-C5guC4oeC4hyIsIm1pbiI6MC41fV0",
+      "values": [
+        "450",
+        "",
+        "3"
+      ],
+      "expected": null,
+      "maxLen": null
+    },
+    {
+      "name": "รายการเครื่องสุขภัณฑ์ (z=) · ท่อประปาสาธารณะ",
+      "query": "z=947.rVPdSgJREH6VZa4UDmZGBOcZeoPwwnCLpXVN3aRYFloLXM2bqATtd5MQBKG2i-a8zTxKnNFNI5OE4MB-nPnmm_nmzHpQB5kTsGeZdrEGcseDA8spggTbqrkgwC7smjZIIGwTfpAKCcekTgnPCQezG2wSjgiRsEH4RPhGeEV4SaoDAsqHrlV2tDqQahB2NVe1CIeEkcGfmPCFVIfxo8ZaoQ1icUKXw03CBwYBYY_D73MJtxwa8Yk585U9xITPy2oauU2DMCKMMv-ill1dbak9Pf6QqU2u2EpwpF8Dxz84Ywb97yL3iXKfwfAX2rzORZIyK7qsH3WmpaZroksYKbY_4GDAIFpLluWGT8z8mHCQZulpKzwIJLxO9i3iWS5cwq8u7yatGBsZ_Z4BYZAxUrxHIfvtTb1wt-kVBLf-IpcXUHFPQHpzP1DIVnoTOgiwHNfcN6sg3eqRKaBkOSDXfQGWa5ZAglf3Da_ig58XUCocb5sOyFw2638C",
+      "values": [
+        [
+          {
+            "value": "โถส้วม วาล์วฟลัช",
+            "qty": "4"
+          },
+          {
+            "value": "โถปัสสาวะชาย วาล์วฟลัช 25 มม.",
+            "qty": "1"
+          }
+        ]
+      ],
+      "expected": "โถส้วม วาล์วฟลัช 4 + โถปัสสาวะชาย วาล์วฟลัช 25 มม. 1",
+      "maxLen": 200
+    },
+    {
+      "name": "รายการ · ชื่อมีวงเล็บและเลข (อ่างอาบน้ำ 40 มม.)",
+      "query": "z=1198.rVRdaxNBFP0rw31KYdC06ss8iy_61kfpQ6RjWdxsv7bBsizUKiSN8UHUll2xNg0lmhIwq9K7_-b8lDJ3s22ocSkiDMvsvfece-4HE1GLzJKm5571V7fJPI3ohReskiHf2w5Jk994Zn0yBO6CL5B3wGPke-A34MG1hdvgEZjB--AT8AT8AfweeY80rW-E3nrg2EnQHXAmiLFcUnCC_AD8U9XAR-DfEvJRWF7JOQP_EmOi7tcVuA_u31kg_R_4HtzgS8W1J_FHyHvqrkK-Dz4EfxaGkZwMPAT_AJ-D3zkIt_-Q87bMeCZysnkx1y7pcCZajl1vnX0sv1clpE6V0_YN_L0s91y-A2Ge1i0MLCUUA-o77_ypzRHg2vap1JKW_qToT3cGO5AOpOI-ncl-JfhYch24PtcePVyoqj5_7QimAifgoao9Xq5EOHUX4PFtpnyvYmv-kfLmIn4pw9JC_7x1XC56ULVPxQxOVa0RrPlWtRp-y94eJIZMaurJ_atonoC7syQjETSczvpQAtoyrqKEqeC_QyqyrGjaDHfJRDNvR0fWIpHYhDR5QWjX7BaZcGvHamp6AZnFWJMX2iYZilqxijZjilc0NRsvn9iAzFK9Hl8C",
+      "values": [
+        [
+          {
+            "value": "อ่างอาบน้ำ (ที่ดักกลิ่น 40 มม.)",
+            "qty": "2"
+          }
+        ]
+      ],
+      "expected": "อ่างอาบน้ำ (ที่ดักกลิ่น 40 มม.) 2",
+      "maxLen": 200
+    },
+    {
+      "name": "รายการ · ยาวเกินเพดานคำตอบ → ฟอร์มต้องกัน",
+      "query": "z=1198.rVRdaxNBFP0rw31KYdC06ss8iy_61kfpQ6RjWdxsv7bBsizUKiSN8UHUll2xNg0lmhIwq9K7_-b8lDJ3s22ocSkiDMvsvfece-4HE1GLzJKm5571V7fJPI3ohReskiHf2w5Jk994Zn0yBO6CL5B3wGPke-A34MG1hdvgEZjB--AT8AT8AfweeY80rW-E3nrg2EnQHXAmiLFcUnCC_AD8U9XAR-DfEvJRWF7JOQP_EmOi7tcVuA_u31kg_R_4HtzgS8W1J_FHyHvqrkK-Dz4EfxaGkZwMPAT_AJ-D3zkIt_-Q87bMeCZysnkx1y7pcCZajl1vnX0sv1clpE6V0_YN_L0s91y-A2Ge1i0MLCUUA-o77_ypzRHg2vap1JKW_qToT3cGO5AOpOI-ncl-JfhYch24PtcePVyoqj5_7QimAifgoao9Xq5EOHUX4PFtpnyvYmv-kfLmIn4pw9JC_7x1XC56ULVPxQxOVa0RrPlWtRp-y94eJIZMaurJ_atonoC7syQjETSczvpQAtoyrqKEqeC_QyqyrGjaDHfJRDNvR0fWIpHYhDR5QWjX7BaZcGvHamp6AZnFWJMX2iYZilqxijZjilc0NRsvn9iAzFK9Hl8C",
+      "values": [
+        [
+          {
+            "value": "อ่างอาบน้ำ (ที่ดักกลิ่น 40 มม.)",
+            "qty": "1"
+          },
+          {
+            "value": "อ่างอาบน้ำ (ที่ดักกลิ่น 50 มม.)",
+            "qty": "1"
+          },
+          {
+            "value": "บิเดท์ / โถปัสสาวะหญิง",
+            "qty": "1"
+          },
+          {
+            "value": "อ่างซักล้าง",
+            "qty": "1"
+          },
+          {
+            "value": "อ่างล้างชามพร้อมที่บดเศษอาหาร",
+            "qty": "1"
+          },
+          {
+            "value": "น้ำพุดื่ม",
+            "qty": "1"
+          },
+          {
+            "value": "เครื่องล้างชาม (ตามบ้าน)",
+            "qty": "1"
+          },
+          {
+            "value": "ช่องระบายน้ำที่พื้น (FD)",
+            "qty": "1"
+          },
+          {
+            "value": "อ่างล้างในครัว (KS)",
+            "qty": "1"
+          }
+        ]
+      ],
+      "expected": "อ่างอาบน้ำ (ที่ดักกลิ่น 40 มม.) 1 + อ่างอาบน้ำ (ที่ดักกลิ่น 50 มม.) 1 + บิเดท์ / โถปัสสาวะหญิง 1 + อ่างซักล้าง 1 + อ่างล้างชามพร้อมที่บดเศษอาหาร 1 + น้ำพุดื่ม 1 + เครื่องล้างชาม (ตามบ้าน) 1 + ช่องระบายน้ำที่พื้น (FD) 1 + อ่างล้างในครัว (KS) 1",
+      "maxLen": 200,
+      "tooLong": true
+    },
+    {
+      "name": "รายการ · ไม่มีแถว → null",
+      "query": "z=1198.rVRdaxNBFP0rw31KYdC06ss8iy_61kfpQ6RjWdxsv7bBsizUKiSN8UHUll2xNg0lmhIwq9K7_-b8lDJ3s22ocSkiDMvsvfece-4HE1GLzJKm5571V7fJPI3ohReskiHf2w5Jk994Zn0yBO6CL5B3wGPke-A34MG1hdvgEZjB--AT8AT8AfweeY80rW-E3nrg2EnQHXAmiLFcUnCC_AD8U9XAR-DfEvJRWF7JOQP_EmOi7tcVuA_u31kg_R_4HtzgS8W1J_FHyHvqrkK-Dz4EfxaGkZwMPAT_AJ-D3zkIt_-Q87bMeCZysnkx1y7pcCZajl1vnX0sv1clpE6V0_YN_L0s91y-A2Ge1i0MLCUUA-o77_ypzRHg2vap1JKW_qToT3cGO5AOpOI-ncl-JfhYch24PtcePVyoqj5_7QimAifgoao9Xq5EOHUX4PFtpnyvYmv-kfLmIn4pw9JC_7x1XC56ULVPxQxOVa0RrPlWtRp-y94eJIZMaurJ_atonoC7syQjETSczvpQAtoyrqKEqeC_QyqyrGjaDHfJRDNvR0fWIpHYhDR5QWjX7BaZcGvHamp6AZnFWJMX2iYZilqxijZjilc0NRsvn9iAzFK9Hl8C",
+      "values": [
+        []
+      ],
+      "expected": null,
+      "maxLen": 200
+    },
+    {
+      "name": "ชุดสาย (จำนวนเส้น × ขนาด)",
+      "query": "z=289.TY4xbgIxEEXv8uvRar3shsRXQRQgnMhiMQEMAlmWUKqkTwpKoIiUMmmG28xRonFF8_TnzWj0E3awDeHZu362gR0lzH2YwaL3mwhCP5m6HhbCb8In4V_hT-GfEi4gbIOPZf0lfK2Ez8LnCoTla_TLoB9hQDBVB0JT2ILwoK5WaGpUDxSduqHiSUfTlJtizWN50Woe1Mq2sKtrjAmreIBNd33fhf9K5W_l7aitbx_CJxB8iO7FrWHjeusICx9gTSb46BawSKu8T7uMPM7_",
+      "values": [
+        [
+          {
+            "value": "10",
+            "qty": "3"
+          },
+          {
+            "value": "1.5",
+            "qty": "1"
+          }
+        ]
+      ],
+      "expected": "3x10 + 1x1.5",
+      "maxLen": null
+    },
+    {
+      "name": "ช่วงท่อ + Δt นำหน้าด้วย @",
+      "query": "z=322.VY-9SgNBHMRfRaZSWMJ5aLOVYOsbSIpINrB4uSRmDSfLgqgQrQ2InReQFBIQP-C_bR7AZ5hHkd0m2gwDM_yY8ZhBlwoDa6r-FPrU49zWfWhUduqgUPXOTAUNyg3lmfJBWVCeGO8payhc1tbluKW0HSiMxs6O6oTC_iEUyiJJcgcFugoTdwXt_3DvKKvMbSnLbFb_uB0EBevMEBp-Fho_CQhqS_hZuJ1dypoilEfKG-WFEjPvK02V77x2mTst423qxId0J-kn43VK4zwffKXM97YDNu_HUBhfmIFtoHGE0FUY9poTU0OXRRF-AQ",
+      "values": [
+        [
+          {
+            "value": "40",
+            "qty": "90"
+          },
+          {
+            "value": "25",
+            "qty": "30.5"
+          }
+        ],
+        "5"
+      ],
+      "expected": "40x90 + 25x30.5 @5",
+      "maxLen": 200
+    }
+  ]
+}

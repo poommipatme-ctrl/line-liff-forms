@@ -8,7 +8,9 @@
   หน้าฟอร์มของ LINE LIFF — "ตัวจับข้อมูล" เท่านั้น ไม่คำนวณอะไรเลย
 
   ⚠️ สัญญากับบอท (line-group-bot · src/line/liff-form.ts) — รายละเอียดที่หัว form.js
-    · ช่องตัวเลข และช่องรายการแบบเพิ่มได้หลายแถว (เลือกจากรายการ + ตัวเลข)
+    · ช่องตัวเลข · ช่องรายการแบบเพิ่มได้หลายแถว (เลือกจากรายการ + ตัวเลข)
+      และช่องแบบแถวที่ค่าเป็นตัวเลขอิสระ + จำนวน (`kind:'rows'` — รายการโหลดของตู้ไฟ)
+    · การวาดช่องอยู่ที่ ui.js (เทสต์เบราว์เซอร์จริงเรียกไฟล์เดียวกัน) ไฟล์นี้คุมแค่พรีวิว/ปุ่มส่ง/LIFF
     · หน้านี้ส่งกลับเข้าแชทเป็นข้อความเดียว รูปเดียวกับที่ผู้ใช้พิมพ์เองเป๊ะ — บอทเป็นผู้ตัดสินค่าตัวเดียว
       (หน้านี้ไม่ตรวจ min/max/จำนวนเต็มซ้ำ ใช้เป็นแอตทริบิวต์ช่วยกรอกเท่านั้น)
     · คำถามแบบรายการมีเพดานความยาวคำตอบ (maxLen) — ข้อความที่ยาวเกิน บอทไม่นับเป็นคำตอบ
@@ -18,34 +20,7 @@
     · ป้ายและตัวเลือกแสดงด้วย textContent เท่านั้น ห้ามใช้ innerHTML
     · สิ่งที่ส่งเข้าแชทมีแต่ตัวเลข และค่าของตัวเลือกที่อยู่ในรายการที่ลิงก์ส่งมาเท่านั้น
 -->
-<style>
-  :root { --paper:#FFFFFF; --ink:#111417; --head:#EDF1F5; --bar:#111417; --bar-ink:#FFFFFF; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--paper); color:var(--ink);
-         font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Thai", sans-serif; font-size:17px; }
-  header { background:var(--head); padding:16px; font-weight:700; font-size:19px; }
-  main { padding:16px; }
-  .field { margin-bottom:18px; }
-  label, .flabel { display:block; font-weight:600; margin-bottom:6px; }
-  .opt { font-weight:400; }
-  .row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-  input, select { font-size:18px; padding:12px; border:2px solid var(--ink); border-radius:8px; min-width:0;
-                  background:var(--paper); color:var(--ink); }
-  input { flex:1; }
-  select { flex:2; }
-  .qty { flex:1; max-width:7em; }
-  .unit { white-space:nowrap; }
-  .rm { flex:none; width:auto; font-size:18px; padding:10px 12px; background:var(--head); color:var(--ink); }
-  .add { width:auto; font-size:17px; padding:10px 14px; background:var(--head); color:var(--ink); font-weight:600; }
-  .preview { background:var(--head); padding:12px; border-radius:8px; margin:8px 0 6px; word-break:break-word; }
-  .count { font-size:15px; margin-bottom:14px; }
-  button { font-size:19px; font-weight:700; padding:14px; border:0; border-radius:8px;
-           background:var(--bar); color:var(--bar-ink); }
-  #submit { width:100%; }
-  button:disabled { opacity:.35; }
-  .msg { padding:12px; border:2px solid var(--ink); border-radius:8px; margin-top:14px; }
-  [hidden] { display:none !important; }
-</style>
+<link rel="stylesheet" href="./form.css">
 </head>
 <body>
 <header id="title">กรอกค่าเพื่อคำนวณ</header>
@@ -62,131 +37,36 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script type="module">
-  import { readParams, decodePayload, buildMessage, tooLong } from './form.js';
+  import { MESSAGES, openForm, showMessage } from './ui.js';
 
   /* LIFF ID ของแอป Engineer Girl — ไม่ใช่ความลับ (อยู่ในลิงก์ liff.line.me อยู่แล้ว) */
   const LIFF_ID = '2011553845-L5ydGKbv';
-  const $ = (id) => document.getElementById(id);
-  const el = (tag, props = {}) => Object.assign(document.createElement(tag), props);
 
-  function showMessage(text) {
-    const m = $('msg');
-    m.textContent = text;
-    m.hidden = false;
-  }
-
-  function numberInput(f) {
-    const input = el('input', { type: 'number', inputMode: f.integer ? 'numeric' : 'decimal', step: f.integer ? '1' : 'any' });
-    if (f.min !== undefined) input.min = String(f.min);
-    if (f.max !== undefined) input.max = String(f.max);
-    return input;
-  }
-
-  /** ช่องตัวเลข — คืนฟังก์ชันอ่านค่า */
-  function renderNumber(box, f, i, onChange) {
-    const wrap = el('div', { className: 'field' });
-    const label = el('label', { htmlFor: `v${i}`, textContent: f.label + (f.optional ? '' : ' *') });
-    if (f.optional) label.appendChild(el('span', { className: 'opt', textContent: ' (ไม่ใส่ก็ได้)' }));
-    const row = el('div', { className: 'row' });
-    const input = numberInput(f);
-    input.id = `v${i}`;
-    input.addEventListener('input', onChange);
-    row.append(input, el('span', { className: 'unit', textContent: f.unit }));
-    wrap.append(label, row);
-    box.appendChild(wrap);
-    return () => input.value;
-  }
-
-  /** ช่องรายการ — แถวละ ตัวเลือก + ตัวเลข · เพิ่ม/ลบแถวได้ · คืนฟังก์ชันอ่านแถวทั้งหมด */
-  function renderList(box, f, onChange) {
-    const wrap = el('div', { className: 'field' });
-    wrap.appendChild(el('div', { className: 'flabel', textContent: `${f.label} *` }));
-    const rowsBox = el('div');
-    const rows = [];
-    const syncRemove = () => rows.forEach((r) => { r.rm.hidden = rows.length === 1; });
-    function addRow() {
-      const row = el('div', { className: 'row' });
-      const sel = el('select');
-      sel.appendChild(el('option', { value: '', textContent: '— เลือก —' }));
-      f.options.forEach((o, k) => sel.appendChild(el('option', { value: String(k), textContent: f.unit ? `${o.label} ${f.unit}` : o.label })));
-      const qty = numberInput(f.qty);
-      qty.className = 'qty';
-      qty.placeholder = f.qty.label;
-      const rm = el('button', { type: 'button', className: 'rm', textContent: '✕' });
-      const r = { row, sel, qty, rm };
-      rm.addEventListener('click', () => { rows.splice(rows.indexOf(r), 1); row.remove(); syncRemove(); onChange(); });
-      sel.addEventListener('change', onChange);
-      qty.addEventListener('input', onChange);
-      row.append(sel, qty, el('span', { className: 'unit', textContent: f.qty.unit }), rm);
-      rowsBox.appendChild(row);
-      rows.push(r);
-      syncRemove();
+  /** ส่งข้อความเข้าแชท — ทางเดียวที่หน้านี้คุยกับ LINE (ตรรกะฟอร์มทั้งหมดอยู่ที่ ui.js) */
+  async function sendToChat(text, reenable) {
+    try {
+      if (!liff.isInClient()) throw new Error('not-in-client');
+      await liff.sendMessages([{ type: 'text', text }]);
+      liff.closeWindow();
+    } catch (e) {
+      /*
+       * เปิดนอกแอป LINE · เปิดซ้ำจาก "recently used" (403) · หรือ LIFF app ไม่ได้ติ๊ก scope
+       * chat_message.write — ให้ผู้ใช้พิมพ์เองได้เสมอ และพิมพ์รหัสข้อผิดพลาดไว้ให้ไล่สาเหตุได้
+       */
+      const code = e && (e.code || e.message) ? String(e.code || e.message).slice(0, 60) : 'unknown';
+      showMessage('ส่งเข้าแชทอัตโนมัติไม่ได้ — พิมพ์ข้อความนี้ในแชทแทนได้: ' + text + ' (รหัส: ' + code + ')');
+      reenable();
     }
-    const add = el('button', { type: 'button', className: 'add', textContent: '+ เพิ่มรายการ' });
-    add.addEventListener('click', () => { addRow(); onChange(); });
-    addRow();
-    wrap.append(rowsBox, add);
-    box.appendChild(wrap);
-    return () => rows.map((r) => ({ value: r.sel.value === '' ? '' : f.options[Number(r.sel.value)].value, qty: r.qty.value }));
-  }
-
-  function render({ fields, maxLen }) {
-    const box = $('fields');
-    const readers = [];
-    const update = () => {
-      const text = buildMessage(fields, readers.map((read) => read()));
-      $('preview').textContent = text ?? '—';
-      const over = tooLong(text, maxLen);
-      const count = $('count');
-      if (maxLen !== null && text !== null) {
-        count.hidden = false;
-        count.textContent = over
-          ? `ยาว ${[...text].length} ตัวอักษร เกินที่บอทรับต่อครั้ง (${maxLen}) — ลดจำนวนรายการลง`
-          : `${[...text].length} / ${maxLen} ตัวอักษร`;
-      } else {
-        count.hidden = true;
-      }
-      $('submit').disabled = text === null || over;
-      return over ? null : text;
-    };
-    fields.forEach((f, i) => readers.push(f.kind === 'list' ? renderList(box, f, update) : renderNumber(box, f, i, update)));
-    update();
-
-    $('form').addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      const text = update();
-      if (text === null) return;
-      $('submit').disabled = true;
-      try {
-        if (!liff.isInClient()) throw new Error('not-in-client');
-        await liff.sendMessages([{ type: 'text', text }]);
-        liff.closeWindow();
-      } catch (e) {
-        /*
-         * เปิดนอกแอป LINE · เปิดซ้ำจาก "recently used" (403) · หรือ LIFF app ไม่ได้ติ๊ก scope
-         * chat_message.write — ให้ผู้ใช้พิมพ์เองได้เสมอ และพิมพ์รหัสข้อผิดพลาดไว้ให้ไล่สาเหตุได้
-         */
-        const code = e && (e.code || e.message) ? String(e.code || e.message).slice(0, 60) : 'unknown';
-        showMessage('ส่งเข้าแชทอัตโนมัติไม่ได้ — พิมพ์ข้อความนี้ในแชทแทนได้: ' + text + ' (รหัส: ' + code + ')');
-        $('submit').disabled = false;
-      }
-    });
-    $('form').hidden = false;
   }
 
   (async () => {
     try {
       await liff.init({ liffId: LIFF_ID });
     } catch (e) {
-      showMessage('เปิดฟอร์มไม่สำเร็จ — กลับไปพิมพ์ในแชทได้ตามเดิม');
+      showMessage(MESSAGES.liff);
       return;
     }
-    const payload = decodePayload(readParams(location.search));
-    if (payload === null) {
-      showMessage('ลิงก์ฟอร์มไม่ครบ — กลับไปพิมพ์ในแชทได้ตามเดิม');
-      return;
-    }
-    render(payload);
+    openForm(location.search, sendToChat);
   })();
 </script>
 </body>

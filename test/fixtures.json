@@ -157,6 +157,120 @@
       ],
       "expected": "40x90 + 25x30.5 @5",
       "maxLen": 200
+    },
+    {
+      "name": "ช่องแบบแถว (z=) · รายการโหลดของตู้ (เครื่องทำน้ำเย็น 900 kW)",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "46.8",
+            "qty": "4"
+          },
+          {
+            "value": "65.5",
+            "qty": "2"
+          },
+          {
+            "value": "44.9",
+            "qty": "2"
+          },
+          {
+            "value": "67.9",
+            "qty": "2"
+          },
+          {
+            "value": "3.4",
+            "qty": "18"
+          }
+        ]
+      ],
+      "expected": "46.8x4 + 65.5x2 + 44.9x2 + 67.9x2 + 3.4x18",
+      "maxLen": 200
+    },
+    {
+      "name": "ช่องแบบแถว · แถวเดียวจำนวนหนึ่งตัว",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "31",
+            "qty": "1"
+          }
+        ]
+      ],
+      "expected": "31x1",
+      "maxLen": 200
+    },
+    {
+      "name": "ช่องแบบแถว · ทศนิยมและจำนวนมาก",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "3.4",
+            "qty": "18"
+          },
+          {
+            "value": "0.5",
+            "qty": "2"
+          }
+        ]
+      ],
+      "expected": "3.4x18 + 0.5x2",
+      "maxLen": 200
+    },
+    {
+      "name": "ช่องแบบแถว · กระแสเป็นศูนย์ → null",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "0",
+            "qty": "4"
+          }
+        ]
+      ],
+      "expected": null,
+      "maxLen": 200
+    },
+    {
+      "name": "ช่องแบบแถว · จำนวนเป็นทศนิยม → null",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "46.8",
+            "qty": "1.5"
+          }
+        ]
+      ],
+      "expected": null,
+      "maxLen": 200
+    },
+    {
+      "name": "ช่องแบบแถว · ไม่มีแถว → null",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        []
+      ],
+      "expected": null,
+      "maxLen": 200
+    },
+    {
+      "name": "ช่องแบบแถว · จำนวนตัวรวมเกินเพดาน → ฟอร์มต้องกัน",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "10",
+            "qty": "201"
+          }
+        ]
+      ],
+      "expected": "10x201",
+      "maxLen": 200,
+      "unitsOver": true
     }
   ]
 }

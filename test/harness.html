@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>harness ของหน้าฟอร์ม (เทสต์เท่านั้น)</title>
+<!--
+  หน้าสำหรับ test/browser.test.mjs เท่านั้น — ไม่ใช่หน้าที่ผู้ใช้เปิด
+
+  ⚠️ โครง id · สไตล์ · และโค้ดที่วาดฟอร์ม เป็น **ไฟล์เดียวกันกับ index.html**
+  (form.css · ui.js · form.js) ต่างกันแค่ไม่มี LIFF: ที่นี่ "ส่งเข้าแชท" = เก็บข้อความไว้ใน
+  `window.__sent` ให้เทสต์อ่าน ⇒ เทสต์วัดของจริง และหน้าจริงไม่มีทางลับไว้ให้เทสต์
+-->
+<link rel="stylesheet" href="../form.css">
+</head>
+<body>
+<header id="title">harness (เทสต์เท่านั้น)</header>
+<main>
+  <form id="form" hidden>
+    <div id="fields"></div>
+    <div>จะส่งเข้าแชท:</div>
+    <div class="preview" id="preview">—</div>
+    <div class="count" id="count" hidden></div>
+    <button type="submit" id="submit" disabled>ยืนยัน</button>
+  </form>
+  <div class="msg" id="msg" hidden></div>
+</main>
+<script type="module">
+  import { decodePayload, readParams } from '../form.js';
+  import { openForm } from '../ui.js';
+  window.__sent = [];
+  /* ชุดช่องที่ถอดได้ — เทสต์ใช้หาว่าตัวเลือกไหนคือค่าไหน (ของจริงหน้าเว็บอ่านจากที่เดียวกัน) */
+  window.__fields = decodePayload(readParams(location.search))?.fields ?? null;
+  window.__opened = openForm(location.search, (text, reenable) => {
+    window.__sent.push(text);
+    reenable();
+  });
+  window.__ready = true;
+</script>
+</body>
+</html>

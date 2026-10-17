@@ -2,5 +2,9 @@
   "name": "line-liff-forms",
   "private": true,
   "type": "module",
-  "scripts": { "test": "node test/form.test.mjs" }
+  "scripts": {
+    "test": "node test/form.test.mjs && node test/browser.test.mjs",
+    "test:unit": "node test/form.test.mjs",
+    "test:browser": "node test/browser.test.mjs"
+  }
 }

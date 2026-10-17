@@ -1,0 +1,38 @@
+/*
+ * สไตล์ของหน้าฟอร์ม — แยกออกจาก index.html เพื่อให้ **เทสต์เบราว์เซอร์วัดหน้าจริงด้วยสไตล์จริง**
+ * (test/harness.html ลิงก์ไฟล์นี้ตัวเดียวกัน ⇒ การวัดว่าแถวไม่ล้นที่ความกว้าง 360px วัดของจริง)
+ * ธีมเดิมของหน้า: กระดาษขาว ตัวอักษรเข้ม ขอบ 2px — ปรับได้ที่ตัวแปรข้างล่างที่เดียว
+ */
+:root { --paper:#FFFFFF; --ink:#111417; --head:#EDF1F5; --bar:#111417; --bar-ink:#FFFFFF; --warn:#A3301A; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+       font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Thai", sans-serif; font-size:17px; }
+header { background:var(--head); padding:16px; font-weight:700; font-size:19px; }
+main { padding:16px; }
+.field { margin-bottom:18px; }
+label, .flabel { display:block; font-weight:600; margin-bottom:6px; }
+.opt { font-weight:400; }
+.row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+input, select { font-size:18px; padding:12px; border:2px solid var(--ink); border-radius:8px; min-width:0;
+                background:var(--paper); color:var(--ink); }
+input { flex:1; }
+select { flex:2; }
+.qty { flex:1; max-width:7em; }
+.amp { flex:1; max-width:8em; }
+.unit { white-space:nowrap; }
+.hint { font-size:15px; margin:-2px 0 8px; }
+.rowbox { margin-bottom:8px; }
+.rowbox .row { margin-bottom:0; }
+.row.bad input { border-color:var(--warn); }
+.note { font-size:15px; color:var(--warn); margin:2px 0 0; }
+.count.warn { color:var(--warn); font-weight:600; }
+.rm { flex:none; width:auto; font-size:18px; padding:10px 12px; background:var(--head); color:var(--ink); }
+.add { width:auto; font-size:17px; padding:10px 14px; background:var(--head); color:var(--ink); font-weight:600; }
+.preview { background:var(--head); padding:12px; border-radius:8px; margin:8px 0 6px; word-break:break-word; }
+.count { font-size:15px; margin-bottom:14px; }
+button { font-size:19px; font-weight:700; padding:14px; border:0; border-radius:8px;
+         background:var(--bar); color:var(--bar-ink); }
+#submit { width:100%; }
+button:disabled { opacity:.35; }
+.msg { padding:12px; border:2px solid var(--ink); border-radius:8px; margin-top:14px; }
+[hidden] { display:none !important; }

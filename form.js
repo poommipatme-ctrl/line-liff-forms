@@ -61,6 +61,54 @@ function cleanNum(x) {
 /** ค่าที่ cleanField คืนเมื่อ `kind` เป็นชนิดที่หน้านี้ยังไม่รองรับ (ต่างจาก `null` = ลิงก์เสีย) */
 export const UNSUPPORTED = 'unsupported-kind';
 
+/** จำนวนหน่วยที่ยอมให้ช่องหนึ่งประกาศ — กันไม่ให้ payload ที่เพี้ยนทำให้หน้าเต็มไปด้วยปุ่ม */
+const MAX_UNITS_PER_FIELD = 6;
+
+/**
+ * ตรวจรายการหน่วยที่มาจาก payload — คืน `null` เมื่อไม่มี/อ่านไม่ได้ (ถือว่าช่องไม่มีหน่วย)
+ *
+ * ⚠️ `suffix` คือสิ่งเดียวที่เดินทางเข้าข้อความที่ส่งกลับเข้าตัวอ่านของบอท
+ *   ถ้ามันหายหรือผิด ค่าขนาดมอเตอร์จะถูกอ่านเป็นกระแสเงียบ ๆ
+ *   ⇒ รับได้เฉพาะสตริง (ว่างได้ — หน่วยเริ่มต้นต้องว่าง) และต้องเป็นสตริงจริง ๆ
+ * ⚠️ ไม่เติมค่าแทนสิ่งที่หาย: หน่วยที่ขาดคีย์ใดคีย์หนึ่ง = payload ใช้ไม่ได้ ⇒ `null`
+ *   ทั้งก้อน ดีกว่าขึ้นตัวเลือกที่ป้ายว่างหรือ suffix ผิด
+ */
+function cleanUnits(u) {
+  if (!Array.isArray(u) || u.length === 0 || u.length > MAX_UNITS_PER_FIELD) return null;
+  const out = [];
+  for (const x of u) {
+    if (x === null || typeof x !== 'object') return null;
+    if (typeof x.id !== 'string' || x.id === '') return null;
+    if (typeof x.suffix !== 'string') return null;
+    if (typeof x.label !== 'string' || x.label === '') return null;
+    if (typeof x.valueLabel !== 'string' || x.valueLabel === '') return null;
+    if (typeof x.valueUnit !== 'string' || x.valueUnit === '') return null;
+    out.push({ id: x.id, label: x.label, valueLabel: x.valueLabel, valueUnit: x.valueUnit, suffix: x.suffix });
+  }
+  if (new Set(out.map((x) => x.id)).size !== out.length) return null;
+  return out;
+}
+
+/**
+ * หน่วยของแถว — `null` เมื่อช่องไม่มีหน่วย · `undefined` เมื่อแถวเลือกหน่วยที่ไม่มีในรายการ
+ *
+ * ⚠️ แถวที่ไม่ระบุหน่วยได้หน่วยแรก (ค่าเริ่มต้น) ตรงกับตัวอ้างอิงฝั่งบอท
+ */
+export function unitOfRow(f, row) {
+  const id = row?.unit;
+  const asked = typeof id === 'string' && id !== '';
+  if (f.units === null || f.units === undefined) {
+    /*
+     * ⚠️ ช่องไม่มีหน่วยให้เลือก แต่แถวระบุหน่วยมา ⇒ **ใช้ไม่ได้** ไม่ใช่ "ทิ้งหน่วยแล้วส่งต่อ"
+     * การทิ้งเงียบ ๆ คือบั๊กเดียวกับ "5.5 kW ถูกอ่านเป็น 5.5 A" และตัวอ้างอิงฝั่งบอท
+     * (`composeFormMessage`) ก็คืน null ในกรณีนี้ — fixtures เป็นตัวผูกให้สองฝั่งตรงกัน
+     */
+    return asked ? undefined : null;
+  }
+  if (!asked) return f.units[0];
+  return f.units.find((u) => u.id === id);
+}
+
 function cleanField(x) {
   if (x === null || typeof x !== 'object') return null;
   if (x.kind === undefined) return cleanNum(x);
@@ -75,6 +123,13 @@ function cleanField(x) {
       item: x.item,
       /* เพดานจำนวนตัวรวมที่บอทรับไหว — เกินแล้วหน้านี้ไม่ให้กดส่ง (คู่ขนานกับ maxLen) */
       maxUnits: typeof x.maxUnits === 'number' && x.maxUnits > 0 ? x.maxUnits : null,
+      /*
+       * หน่วยที่แถวนี้เลือกได้ — `null` = ช่องนี้ไม่มีหน่วยให้เลือก (payload เก่า)
+       * ⚠️ `null` ต้องทำให้หน้าฟอร์มทำงาน **เหมือนก่อนมีฟีเจอร์นี้ทุกอย่าง**
+       *   (ไม่มีตัวเลือกหน่วย · ข้อความที่ประกอบไม่มี suffix) เพราะปุ่มที่ส่งไปแล้ว
+       *   ในแชทของผู้ใช้ยังเปิดหน้านี้อยู่ และบอทรุ่นเก่าไม่ได้ส่ง `units` มา
+       */
+      units: cleanUnits(x.units),
     };
   }
   if (x.kind !== 'list') return UNSUPPORTED;
@@ -140,10 +195,22 @@ export function rowState(f, row) {
   const a = Number(v);
   const n = Number(q);
   const min = f.qty.min === undefined ? 1 : Math.max(f.qty.min, 1);
+  /*
+   * ⚠️ หน่วยของแถว — ป้ายในข้อความเตือนก็เปลี่ยนตามหน่วยที่เลือก (เช่น
+   * "ขนาดมอเตอร์ต่อตัวต้องมากกว่า 0" ไม่ใช่ "กระแสต่อตัว...") จึงต้องหาก่อนตรวจค่า
+   */
+  const u = unitOfRow(f, row);
+  /*
+   * หน่วยที่ไม่อยู่ในรายการของช่อง (หรือช่องไม่มีหน่วยให้เลือกเลย) ⇒ ส่งไม่ได้
+   * **ไม่เดาเป็นหน่วยเริ่มต้นและไม่ทิ้งหน่วยทิ้ง** — ดูเหตุผลที่ `unitOfRow()`
+   */
+  if (u === undefined) return { skip: false, problem: 'หน่วยของแถวนี้ใช้ไม่ได้ — เลือกหน่วยใหม่' };
+  const vLabel = u === null ? f.value.label : u.valueLabel;
+  const suffix = u === null ? '' : u.suffix;
   if (v === '') {
-    return { skip: true, problem: null, hint: q === '' ? null : `ยังไม่ได้กรอก${f.value.label} — แถวนี้จะไม่ถูกส่ง` };
+    return { skip: true, problem: null, hint: q === '' ? null : `ยังไม่ได้กรอก${vLabel} — แถวนี้จะไม่ถูกส่ง` };
   }
-  if (!Number.isFinite(a) || !(a > 0)) return { skip: false, problem: `${f.value.label}ต้องมากกว่า 0` };
+  if (!Number.isFinite(a) || !(a > 0)) return { skip: false, problem: `${vLabel}ต้องมากกว่า 0` };
   if (q === '') return { skip: false, problem: `ยังไม่ได้กรอก${f.qty.label}` };
   if (!Number.isFinite(n) || !Number.isInteger(n) || n < min) {
     return { skip: false, problem: `${f.qty.label}ต้องเป็นจำนวนเต็มตั้งแต่ ${min} ขึ้นไป` };
@@ -151,7 +218,7 @@ export function rowState(f, row) {
   return {
     skip: false,
     problem: null,
-    text: f.item.replace('{v}', () => String(a)).replace('{q}', () => String(n)),
+    text: f.item.replace('{v}', () => `${String(a)}${suffix}`).replace('{q}', () => String(n)),
     units: n,
   };
 }

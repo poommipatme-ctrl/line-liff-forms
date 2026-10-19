@@ -160,7 +160,7 @@
     },
     {
       "name": "ช่องแบบแถว (z=) · รายการโหลดของตู้ (เครื่องทำน้ำเย็น 900 kW)",
-      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
       "values": [
         [
           {
@@ -190,7 +190,7 @@
     },
     {
       "name": "ช่องแบบแถว · แถวเดียวจำนวนหนึ่งตัว",
-      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
       "values": [
         [
           {
@@ -204,7 +204,7 @@
     },
     {
       "name": "ช่องแบบแถว · ทศนิยมและจำนวนมาก",
-      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
       "values": [
         [
           {
@@ -222,7 +222,7 @@
     },
     {
       "name": "ช่องแบบแถว · กระแสเป็นศูนย์ → null",
-      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
       "values": [
         [
           {
@@ -236,7 +236,7 @@
     },
     {
       "name": "ช่องแบบแถว · จำนวนเป็นทศนิยม → null",
-      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
       "values": [
         [
           {
@@ -250,7 +250,7 @@
     },
     {
       "name": "ช่องแบบแถว · ไม่มีแถว → null",
-      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
       "values": [
         []
       ],
@@ -259,7 +259,7 @@
     },
     {
       "name": "ช่องแบบแถว · จำนวนตัวรวมเกินเพดาน → ฟอร์มต้องกัน",
-      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
       "values": [
         [
           {
@@ -271,6 +271,198 @@
       "expected": "10x201",
       "maxLen": 200,
       "unitsOver": true
+    },
+    {
+      "name": "หน่วยต่อแถว · ไม่ระบุหน่วย (ค่าเริ่มต้น = A) ต้องได้ไบต์เดิม",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "46.8",
+            "qty": "4"
+          },
+          {
+            "value": "65.5",
+            "qty": "2"
+          }
+        ]
+      ],
+      "expected": "46.8x4 + 65.5x2",
+      "maxLen": 200
+    },
+    {
+      "name": "หน่วยต่อแถว · ระบุ 'A' ชัด ๆ = ไม่ระบุ ไบต์เดียวกัน",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "46.8",
+            "qty": "4",
+            "unit": "A"
+          },
+          {
+            "value": "65.5",
+            "qty": "2",
+            "unit": "A"
+          }
+        ]
+      ],
+      "expected": "46.8x4 + 65.5x2",
+      "maxLen": 200
+    },
+    {
+      "name": "หน่วยต่อแถว · kW ล้วน",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "5.5",
+            "qty": "2",
+            "unit": "kW"
+          }
+        ]
+      ],
+      "expected": "5.5kWx2",
+      "maxLen": 200
+    },
+    {
+      "name": "หน่วยต่อแถว · ผสม kW แล้ว A",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "5.5",
+            "qty": "2",
+            "unit": "kW"
+          },
+          {
+            "value": "46.8",
+            "qty": "4",
+            "unit": "A"
+          }
+        ]
+      ],
+      "expected": "5.5kWx2 + 46.8x4",
+      "maxLen": 200
+    },
+    {
+      "name": "หน่วยต่อแถว · ผสม A แล้ว kW (ลำดับกลับกัน)",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "46.8",
+            "qty": "4",
+            "unit": "A"
+          },
+          {
+            "value": "5.5",
+            "qty": "2",
+            "unit": "kW"
+          }
+        ]
+      ],
+      "expected": "46.8x4 + 5.5kWx2",
+      "maxLen": 200
+    },
+    {
+      "name": "หน่วยต่อแถว · kW ที่ไม่ตรงแถวในตาราง (ฟอร์มส่งได้ บอทเป็นคนตอบว่าไม่ตรง)",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "7.3",
+            "qty": "1",
+            "unit": "kW"
+          }
+        ]
+      ],
+      "expected": "7.3kWx1",
+      "maxLen": 200
+    },
+    {
+      "name": "หน่วยต่อแถว · kW ทศนิยมหลายแถว",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "0.75",
+            "qty": "3",
+            "unit": "kW"
+          },
+          {
+            "value": "37",
+            "qty": "1",
+            "unit": "kW"
+          }
+        ]
+      ],
+      "expected": "0.75kWx3 + 37kWx1",
+      "maxLen": 200
+    },
+    {
+      "name": "หน่วยต่อแถว · แถว kW จำนวนตัวรวมเกินเพดาน → ฟอร์มต้องกัน",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "5.5",
+            "qty": "201",
+            "unit": "kW"
+          }
+        ]
+      ],
+      "expected": "5.5kWx201",
+      "maxLen": 200,
+      "unitsOver": true
+    },
+    {
+      "name": "หน่วยต่อแถว · หน่วยที่ไม่อยู่ในรายการ ('HP') → null",
+      "query": "z=545.lZA9SwNBGIT_SpgqwhYx5Xbp04YrJMXJ7clyH5Lc3nlyLJjYRLDUIqWIBJSAH827_-b9KXIbYwwowX5mnplpUEH2BWKt0qiAPGmQ6DyCxPT8ooBAGp6qFBLs5kwvTE9Md-yumZZM90yO3Q0EqjAtFWSzk9OM6ZHpld2M6bnVugXT2pvemFYQKHNtIDGAFZiYy337gunDQ1ZMy534p1_nRp2pKaSZlkog0znksRXQRmWQaCpbNxMLgSysR7k2BWS_19tEbabqyPPFX7U73cHRdt3wH8u8YbSdJ1CUcaxrSMCKL2oS7GHnfut7ey49tGnuygeuW5a77XST4JcmB1wHu_kS3-WSAHZsx_6vocr9W_YT",
+      "values": [
+        [
+          {
+            "value": "5.5",
+            "qty": "2",
+            "unit": "HP"
+          }
+        ]
+      ],
+      "expected": null,
+      "maxLen": 200
+    },
+    {
+      "name": "[ช่องสังเคราะห์] payload เก่าไม่มี units · แถวแอมป์ต้องได้ไบต์เดิม",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "46.8",
+            "qty": "4"
+          },
+          {
+            "value": "65.5",
+            "qty": "2"
+          }
+        ]
+      ],
+      "expected": "46.8x4 + 65.5x2",
+      "maxLen": 200
+    },
+    {
+      "name": "[ช่องสังเคราะห์] payload เก่าไม่มี units · ระบุหน่วยมาต้องได้ null (ช่องไม่ได้เปิดให้เลือก)",
+      "query": "z=258.VY2xagJBFEX_5dZTGMvXpU9rFSxWHGVwd8Td2Y0yTGHSmD4prEMQEgRDmjd_cz9FXAuT8h7O4UZ0kKHBzNly2kAeIxbOTyGol08NDMpiYksImJ-p39RP6hvzC3VPfadm5lcYdEXZWki86bqlflBPzFvq18XNO-qxj36oBxi03gUI7pEMVmHzP99Rf_uTA3V_k__2zgc7tzUk1K01qJyH3CUDF2wFQezSOq4SDKpiPfIuNJDhYJDGPXiw_jrP",
+      "values": [
+        [
+          {
+            "value": "5.5",
+            "qty": "2",
+            "unit": "kW"
+          }
+        ]
+      ],
+      "expected": null,
+      "maxLen": 200
     }
   ]
 }

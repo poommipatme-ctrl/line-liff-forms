@@ -78,12 +78,26 @@ function renderList(box, f, onChange) {
 function renderRows(box, f, onChange) {
   const wrap = el('div', { className: 'field' });
   wrap.appendChild(el('div', { className: 'flabel', textContent: `${f.label} *` }));
-  wrap.appendChild(el('div', { className: 'hint', textContent: `${f.value.label} (${f.value.unit}) · ${f.qty.label} (${f.qty.unit}) — เพิ่มแถวได้เท่าจำนวนโหลดที่มี` }));
+  /*
+   * ⚠️ บรรทัดบอกวิธีใช้ต่างกันตามว่าช่องมีหน่วยให้เลือกไหม — payload เก่า (ไม่มี `units`)
+   * ต้องได้ข้อความเดิมทุกตัวอักษร ไม่ใช่ข้อความใหม่ที่พูดถึงหน่วยที่หน้านั้นไม่มีให้เลือก
+   */
+  const unitNames = f.units === null || f.units === undefined ? null : f.units.map((u) => u.valueUnit).join(' หรือ ');
+  wrap.appendChild(
+    el('div', {
+      className: 'hint',
+      textContent:
+        unitNames === null
+          ? `${f.value.label} (${f.value.unit}) · ${f.qty.label} (${f.qty.unit}) — เพิ่มแถวได้เท่าจำนวนโหลดที่มี`
+          : `แต่ละแถวเลือกหน่วยได้ (${unitNames}) · ${f.qty.label} (${f.qty.unit}) — ผสมหน่วยกันในฟอร์มเดียวได้ เพิ่มแถวได้เท่าจำนวนโหลดที่มี`,
+    }),
+  );
   const rowsBox = el('div');
   const rows = [];
   const total = el('div', { className: 'count' });
 
-  const read = () => rows.map((r) => ({ value: r.val.value, qty: r.qty.value }));
+  const read = () =>
+    rows.map((r) => (r.unit === null ? { value: r.val.value, qty: r.qty.value } : { value: r.val.value, qty: r.qty.value, unit: r.unit.value }));
   const syncRemove = () => rows.forEach((r) => { r.rm.hidden = rows.length === 1; });
   const paint = () => {
     const vals = read();
@@ -110,7 +124,6 @@ function renderRows(box, f, onChange) {
     const row = el('div', { className: 'row' });
     const val = numberInput(f.value);
     val.className = 'amp';
-    val.placeholder = f.value.label;
     const qty = numberInput(f.qty);
     qty.className = 'qty';
     qty.placeholder = f.qty.label;
@@ -118,7 +131,34 @@ function renderRows(box, f, onChange) {
     qty.value = '1';
     const rm = el('button', { type: 'button', className: 'rm', textContent: '✕' });
     const note = el('div', { className: 'note', hidden: true });
-    const r = { row, val, qty, rm, note, dirty: false };
+
+    /*
+     * ตัวเลือกหน่วยต่อแถว — มีเฉพาะเมื่อ payload ประกาศ `units` มา
+     *
+     * ⚠️ ใช้ `<select>` ไม่ใช่ปุ่มสลับ เพราะกดง่ายบนมือถือ (ระบบเปิดเป็นวงล้อ/เมนูเต็มจอ
+     *   ให้เอง นิ้วไม่ต้องเล็งปุ่มเล็ก) และขยายเป็นสามหน่วยขึ้นไปได้โดยหน้าไม่ล้น
+     * ⚠️ **ไม่ล้างตัวเลขที่กรอกไว้เมื่อสลับหน่วย** — คนกรอกเลขแล้วเพิ่งนึกได้ว่าเลือก
+     *   หน่วยผิด การล้างให้คือการลบงานของเขา · เปลี่ยนแค่ป้าย/placeholder/ตัวย่อ
+     * ⚠️ ตัวย่อของหน่วยที่เลือกอยู่ **แสดงข้างช่องตัวเลขตลอด** (ช่อง `unitTag`)
+     *   เพื่อให้เห็นว่าเลขที่กรอกเป็นหน่วยอะไรโดยไม่ต้องเปิด dropdown ดู
+     */
+    const hasUnits = f.units !== null && f.units !== undefined;
+    const unit = hasUnits ? el('select', { className: 'usel' }) : null;
+    /*
+     * ⚠️ ป้ายในตัวเลือกใช้ **ตัวย่อ** (`valueUnit`: A / kW) ไม่ใช่ป้ายยาว (`label`)
+     *   เพราะ `<select>` ที่ปิดอยู่จะโชว์ข้อความของตัวเลือกที่เลือก ⇒ ตัวย่อสั้นทำให้
+     *   หน่วยที่เลือก "อยู่ข้างช่องตัวเลขและเห็นตลอด" ได้จริงบนจอ 390 px
+     *   ส่วนป้ายยาวไปอยู่ที่ `title` ของตัวเลือกและที่บรรทัดบอกวิธีใช้เหนือช่อง
+     *   (ถ้าใช้ป้ายยาวในตัวเลือก แถวจะกว้างเกินจอและช่องตัวเลขถูกบีบจนกรอกยาก)
+     */
+    if (unit !== null) {
+      for (const u of f.units) unit.appendChild(el('option', { value: u.id, textContent: u.valueUnit, title: u.label }));
+      unit.value = f.units[0].id;
+    }
+    /* payload เก่า: ป้ายหน่วยคงที่เหมือนเดิมทุกตัวอักษร */
+    const unitTag = hasUnits ? null : el('span', { className: 'unit', textContent: f.value.unit });
+
+    const r = { row, val, qty, rm, note, unit, dirty: false };
     const touched = () => { r.dirty = true; changed(); };
     rm.addEventListener('click', () => {
       rows.splice(rows.indexOf(r), 1);
@@ -128,7 +168,25 @@ function renderRows(box, f, onChange) {
     });
     val.addEventListener('input', touched);
     qty.addEventListener('input', touched);
-    row.append(val, el('span', { className: 'unit', textContent: f.value.unit }), qty, el('span', { className: 'unit', textContent: f.qty.unit }), rm);
+    if (unit !== null) {
+      unit.addEventListener('change', () => {
+        const u = f.units.find((x) => x.id === unit.value) ?? f.units[0];
+        /* ป้ายช่องเปลี่ยนตามหน่วย — **ค่าที่กรอกไว้ไม่ถูกแตะ** (ดูเหตุผลข้างบน) */
+        val.placeholder = u.valueLabel;
+        unit.title = u.label;
+        touched();
+      });
+      unit.title = f.units[0].label;
+    }
+    val.placeholder = hasUnits ? f.units[0].valueLabel : f.value.label;
+    row.append(
+      val,
+      ...(unitTag === null ? [] : [unitTag]),
+      ...(unit === null ? [] : [unit]),
+      qty,
+      el('span', { className: 'unit', textContent: f.qty.unit }),
+      rm,
+    );
     rowBox.append(row, note);
     rowsBox.appendChild(rowBox);
     rows.push(r);

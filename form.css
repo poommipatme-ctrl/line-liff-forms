@@ -20,6 +20,9 @@ select { flex:2; }
 .qty { flex:1; max-width:7em; }
 .amp { flex:1; max-width:8em; }
 .unit { white-space:nowrap; }
+/* ตัวเลือกหน่วยต่อแถว — แคบพอให้ช่องตัวเลขยังกรอกสบายบนจอ 390 px
+   (select ทั่วไปในหน้านี้เป็น flex:2 ซึ่งกว้างเกินสำหรับแถว) */
+.usel { flex:0 0 auto; width:auto; min-width:4.5em; padding:12px 6px; text-align:center; }
 .hint { font-size:15px; margin:-2px 0 8px; }
 .rowbox { margin-bottom:8px; }
 .rowbox .row { margin-bottom:0; }

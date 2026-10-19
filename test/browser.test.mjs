@@ -16,7 +16,7 @@
  */
 import { spawn } from 'node:child_process';
 import { deflateRawSync } from 'node:zlib';
-import { readFileSync, mkdtempSync, rmSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -133,13 +133,13 @@ class Cdp {
 }
 
 /** เปิดหน้าใหม่ที่ url แล้วคืนตัวประเมินนิพจน์ในหน้านั้น */
-async function openPage(browser, url) {
+async function openPage(browser, url, width = 360) {
   const { targetId } = await browser.send('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await browser.send('Target.attachToTarget', { targetId, flatten: true });
   await browser.send('Page.enable', {}, sessionId);
   await browser.send('Runtime.enable', {}, sessionId);
   await browser.send('Emulation.setDeviceMetricsOverride',
-    { width: 360, height: 900, deviceScaleFactor: 1, mobile: true }, sessionId);
+    { width, height: 900, deviceScaleFactor: 1, mobile: true }, sessionId);
   await browser.send('Page.navigate', { url }, sessionId);
   const evaluate = async (expression) => {
     const r = await browser.send('Runtime.evaluate',
@@ -153,11 +153,19 @@ async function openPage(browser, url) {
     await sleep(100);
   }
   const close = () => browser.send('Target.closeTarget', { targetId });
-  return { evaluate, close };
+  /* `sessionId` ออกมาด้วยเพื่อให้ถ่ายภาพหน้าจอ (Page.captureScreenshot) ได้ */
+  return { evaluate, close, sessionId };
 }
 
 const HARNESS = pathToFileURL(join(process.cwd(), 'test', 'harness.html')).href;
 const page = (query) => `${HARNESS}?${query}`;
+
+/*
+ * โฟลเดอร์ภาพหน้าจอ — ของให้คนดูตอนตรวจงาน ตั้งทับได้ด้วย SHOT_DIR
+ * เพื่อให้สคริปต์ของรอบงานเก็บไปไว้ที่ scratchpad ได้
+ */
+const SHOT_DIR = process.env.SHOT_DIR ?? join(process.cwd(), 'test', 'shots');
+mkdirSync(SHOT_DIR, { recursive: true });
 
 /** ตัวช่วยในหน้า — กรอกแถวที่ k แล้วยิง event input จริง */
 const FILL = `
@@ -174,6 +182,18 @@ const FILL = `
   window.__disabled = () => document.getElementById('submit').disabled;
   window.__notes = () => [...document.querySelectorAll('.note')].filter((n) => !n.hidden).map((n) => n.textContent);
   window.__total = () => (document.querySelector('.count') ? document.querySelector('.count').textContent : '');
+  /* เลือกหน่วยของแถวที่ k แล้วยิง change จริง (เหมือนผู้ใช้เลือกใน dropdown) */
+  window.__setUnit = (k, id) => {
+    const s = window.__rows()[k].querySelector('.usel');
+    s.value = id; s.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+  window.__unit = (k) => { const s = window.__rows()[k].querySelector('.usel'); return s === null ? null : s.value; };
+  window.__unitText = (k) => {
+    const s = window.__rows()[k].querySelector('.usel');
+    return s === null ? null : s.options[s.selectedIndex].textContent;
+  };
+  window.__valPh = (k) => window.__rows()[k].querySelector('.amp').placeholder;
+  window.__valNum = (k) => window.__rows()[k].querySelector('.amp').value;
   true;
 `;
 
@@ -317,6 +337,151 @@ try {
     check(formHidden === true, '  และไม่โชว์ฟอร์มเปล่า');
     await p.close();
   }
+  /* ════════════════════════════════════════════════════════════════ */
+  /* 5. หน่วยต่อแถว (A / kW) — เพิ่ม 2026-10-19                       */
+  /* ════════════════════════════════════════════════════════════════ */
+  /*
+   * ⚠️ สิ่งที่พังได้จริงของฟีเจอร์นี้ และตรรกะเปล่าจับไม่ได้:
+   *   · สลับหน่วยแล้ว **ตัวเลขที่กรอกไว้หาย** (ลบงานของผู้ใช้)
+   *   · หน่วยที่เลือกมองไม่เห็นข้างช่องตัวเลข ⇒ ผู้ใช้ไม่รู้ว่ากรอกเป็นหน่วยอะไร
+   *   · payload เก่าขึ้นตัวเลือกหน่วยที่บอทรุ่นนั้นไม่ได้สั่ง
+   *   · แถวล้นจอ 360/390 px เพราะมีตัวควบคุมเพิ่มมาอีกตัว
+   */
+  const UNIT_SHOTS = [];
+  async function shoot(p, name) {
+    const { data } = await browser.send('Page.captureScreenshot', { format: 'png' }, p.sessionId);
+    const file = join(SHOT_DIR, `${name}.png`);
+    writeFileSync(file, Buffer.from(data, 'base64'));
+    UNIT_SHOTS.push(file);
+    return file;
+  }
+
+  /* (ก) แถวเริ่มต้น + สลับหน่วยโดยไม่ล้างเลข */
+  {
+    const kw = caseByName('หน่วยต่อแถว · kW ล้วน');
+    const p = await openPage(browser, page(kw.query), 390);
+    await p.evaluate(FILL);
+    check(await p.evaluate('window.__opened.kind') === 'ok', 'payload ที่มี units → เปิดฟอร์มได้');
+    check(await p.evaluate('window.__unit(0)') !== null, '  แถวมีตัวเลือกหน่วย');
+    check(await p.evaluate('window.__unit(0)') === 'A', '  หน่วยเริ่มต้นเป็นหน่วยแรก (A)', String(await p.evaluate('window.__unit(0)')));
+    check(await p.evaluate('window.__unitText(0)') === 'A', '  ตัวย่อหน่วยที่เลือกเห็นได้ข้างช่องเลข', String(await p.evaluate('window.__unitText(0)')));
+    check(/กระแส/.test(await p.evaluate('window.__valPh(0)')), '  placeholder เป็นป้ายของหน่วย A', await p.evaluate('window.__valPh(0)'));
+    await shoot(p, '1-แถวเริ่มต้น-หน่วย-A');
+
+    /* กรอกเลขก่อน แล้วค่อยสลับหน่วย — เลขต้องอยู่ครบ */
+    await p.evaluate('window.__set(0, 5.5, 2); true;');
+    check(await p.evaluate('window.__valNum(0)') === '5.5', '  กรอก 5.5 แล้วเลขอยู่ในช่อง');
+    await p.evaluate("window.__setUnit(0, 'kW'); true;");
+    check(await p.evaluate('window.__valNum(0)') === '5.5', 'สลับหน่วยแล้ว **ตัวเลขที่กรอกไว้ไม่หาย**', `ช่องเหลือ "${await p.evaluate('window.__valNum(0)')}"`);
+    check(await p.evaluate('window.__unitText(0)') === 'kW', '  ตัวย่อข้างช่องเปลี่ยนเป็น kW');
+    check(/มอเตอร์/.test(await p.evaluate('window.__valPh(0)')), '  placeholder เปลี่ยนเป็นป้ายของหน่วย kW', await p.evaluate('window.__valPh(0)'));
+    const prev = await p.evaluate('window.__preview()');
+    check(prev === kw.expected, 'ข้อความในพรีวิวตรงกับที่บอทคาดเป๊ะ', `"${prev}" vs "${kw.expected}"`);
+    check(await p.evaluate('window.__disabled()') === false, '  กดส่งได้');
+    await shoot(p, '2-แถว-kW-กรอกค่าแล้ว');
+    await p.evaluate("document.getElementById('submit').click(); true;");
+    const sent = await p.evaluate('window.__sent');
+    check(sent.length === 1 && sent[0] === kw.expected, 'กดยืนยัน → ส่งข้อความของหน่วย kW เข้าแชท', JSON.stringify(sent));
+    await p.close();
+  }
+
+  /* (ข) ผสมสองหน่วยในฟอร์มเดียว */
+  {
+    const mix = caseByName('ผสม kW แล้ว A');
+    const rows = mix.values[0];
+    const p = await openPage(browser, page(mix.query), 390);
+    await p.evaluate(FILL);
+    await p.evaluate(`window.__add(${rows.length - 1}); true;`);
+    for (let k = 0; k < rows.length; k += 1) {
+      if (rows[k].unit !== undefined) await p.evaluate(`window.__setUnit(${k}, ${JSON.stringify(rows[k].unit)}); true;`);
+      await p.evaluate(`window.__set(${k}, ${JSON.stringify(rows[k].value)}, ${JSON.stringify(rows[k].qty)}); true;`);
+    }
+    check(await p.evaluate('window.__unit(0)') === 'kW' && await p.evaluate('window.__unit(1)') === 'A', 'สองแถวถือหน่วยคนละหน่วยได้', `${await p.evaluate('window.__unit(0)')} + ${await p.evaluate('window.__unit(1)')}`);
+    const prev = await p.evaluate('window.__preview()');
+    check(prev === mix.expected, 'ข้อความผสมสองหน่วยตรงกับที่บอทคาดเป๊ะ', `"${prev}" vs "${mix.expected}"`);
+    const units = rows.reduce((n, r) => n + Number(r.qty), 0);
+    check(await p.evaluate('window.__total()') === `รวม ${units} ตัว`, `  "รวม ${units} ตัว" นับทุกแถวทุกหน่วย`, await p.evaluate('window.__total()'));
+    check(await p.evaluate('window.__notes().length') === 0, '  ไม่มีแถวไหนขึ้นคำเตือน');
+    await shoot(p, '3-ผสมสองหน่วย');
+    /* ไม่ล้นจอ 390 — ตัวควบคุมเพิ่มมาหนึ่งตัวต่อแถว */
+    const w = await p.evaluate('({ doc: document.documentElement.scrollWidth, body: document.body.scrollWidth })');
+    check(w.doc <= 390 && w.body <= 390, `หน้าไม่ล้นแนวนอนที่ 390px (doc ${w.doc} · body ${w.body})`);
+    const clip = await p.evaluate(`
+      (() => {
+        const bad = [];
+        for (const r of window.__rows()) {
+          const rect = r.getBoundingClientRect();
+          if (rect.right > 390.5 || rect.left < -0.5) bad.push('แถวล้น ' + Math.round(rect.left) + '-' + Math.round(rect.right));
+          for (const c of r.querySelectorAll('input, select')) {
+            const b = c.getBoundingClientRect();
+            if (b.width < 28 || b.height < 28) bad.push(c.className + ' เล็กเกินกด ' + Math.round(b.width) + 'x' + Math.round(b.height));
+            if (b.right > 390.5) bad.push(c.className + ' ล้นขวา ' + Math.round(b.right));
+          }
+        }
+        return bad;
+      })()
+    `);
+    check(clip.length === 0, '  ทุกช่อง/ตัวเลือกในแถวกดได้และไม่ล้นขอบ (ตัวหาร: ' + rows.length + ' แถว)', clip.join(' · '));
+    await p.close();
+  }
+
+  /* (ค) payload เก่าที่ไม่มี units — ต้องเหมือนก่อนมีฟีเจอร์นี้ */
+  {
+    const old = caseByName('payload เก่าไม่มี units · แถวแอมป์');
+    const rows = old.values[0];
+    const p = await openPage(browser, page(old.query), 390);
+    await p.evaluate(FILL);
+    check(await p.evaluate('window.__opened.kind') === 'ok', 'payload เก่า (ไม่มี units) → เปิดฟอร์มได้');
+    check(await p.evaluate('window.__unit(0)') === null, '  **ไม่มีตัวเลือกหน่วยเลย** (ไม่ขึ้นของที่บอทรุ่นนั้นไม่ได้สั่ง)');
+    check(await p.evaluate("window.__rows()[0].querySelector('.unit').textContent") === 'A', '  ป้ายหน่วยคงที่ยังเป็น A เหมือนเดิม');
+    check(/กระแส/.test(await p.evaluate('window.__valPh(0)')), '  placeholder เป็นป้ายเดิมของช่อง', await p.evaluate('window.__valPh(0)'));
+    await p.evaluate(`window.__add(${rows.length - 1}); true;`);
+    for (let k = 0; k < rows.length; k += 1) {
+      await p.evaluate(`window.__set(${k}, ${JSON.stringify(rows[k].value)}, ${JSON.stringify(rows[k].qty)}); true;`);
+    }
+    const prev = await p.evaluate('window.__preview()');
+    check(prev === old.expected, '  ข้อความที่ประกอบได้ไบต์เดิมกับที่บอทคาด', `"${prev}" vs "${old.expected}"`);
+    await shoot(p, '4-payload-เก่าไม่มีหน่วย');
+    await p.close();
+  }
+
+  /* (ง) เพดานจำนวนตัวนับแถวที่มีหน่วยด้วย */
+  {
+    const over = caseByName('แถว kW จำนวนตัวรวมเกินเพดาน');
+    const r0 = over.values[0][0];
+    const p = await openPage(browser, page(over.query), 390);
+    await p.evaluate(FILL);
+    await p.evaluate(`window.__setUnit(0, ${JSON.stringify(r0.unit)}); true;`);
+    await p.evaluate(`window.__set(0, ${JSON.stringify(r0.value)}, ${JSON.stringify(r0.qty)}); true;`);
+    check(await p.evaluate('window.__disabled()') === true, 'แถว kW ที่จำนวนตัวเกินเพดาน → กดส่งไม่ได้');
+    check(/เกิน/.test(await p.evaluate('window.__total()')), '  และบอกว่าเกินเพดาน', await p.evaluate('window.__total()'));
+    await p.close();
+  }
+
+  /* (จ) หน่วยที่ไม่อยู่ในรายการ — ประกอบไม่ได้ ไม่เดาเป็นหน่วยเริ่มต้น */
+  {
+    const kw = caseByName('หน่วยต่อแถว · kW ล้วน');
+    const p = await openPage(browser, page(kw.query), 390);
+    await p.evaluate(FILL);
+    await p.evaluate('window.__set(0, 5.5, 2); true;');
+    /* ยัดค่าหน่วยที่ไม่มีใน dropdown เข้าไปตรง ๆ (จำลอง payload/DOM ที่ถูกแก้) */
+    await p.evaluate(`
+      (() => {
+        const s = window.__rows()[0].querySelector('.usel');
+        const o = document.createElement('option');
+        o.value = 'HP'; o.textContent = 'HP';
+        s.appendChild(o); s.value = 'HP';
+        s.dispatchEvent(new Event('change', { bubbles: true }));
+      })(); true;
+    `);
+    check(await p.evaluate('window.__disabled()') === true, "หน่วยที่ช่องไม่ได้เปิด ('HP') → กดส่งไม่ได้ (ไม่เดาเป็น A)");
+    const notes = await p.evaluate('window.__notes()');
+    check(notes.length > 0 && /หน่วย/.test(notes.join(' ')), '  และบอกเหตุที่แถวนั้น', JSON.stringify(notes));
+    await p.close();
+  }
+
+  console.log(`  ⓘ ภาพหน้าจอ 390px ${UNIT_SHOTS.length} ภาพ → ${SHOT_DIR}`);
+
 } catch (e) {
   console.log(`  ✘ รันเทสต์เบราว์เซอร์ไม่สำเร็จ — ${e.message}`);
   failed += 1;
